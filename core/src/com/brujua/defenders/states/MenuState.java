@@ -24,7 +24,7 @@ public class MenuState extends State {
     private float timePassedSinceLastShipAdded =0;
 
 
-    public MenuState(StackGameStateManager stateManager) {
+    public MenuState(GameStateManager stateManager) {
         super(stateManager);
         background = new Sprite(new Texture(Gdx.files.internal("spaceBackground.png")));
         background.setPosition(0,0);
@@ -40,7 +40,7 @@ public class MenuState extends State {
     @Override
     public void update(float dt) {
         timePassedSinceLastShipAdded +=dt;
-        if(timePassedSinceLastShipAdded >5){
+        if(timePassedSinceLastShipAdded >0.5){
             timePassedSinceLastShipAdded=0;
             shipAnimations.add(new RandomPassingShipAnimation(worldWidth,worldHeight));
         }

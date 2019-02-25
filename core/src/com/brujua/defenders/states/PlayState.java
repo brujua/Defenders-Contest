@@ -5,24 +5,28 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.brujua.defenders.entities.SpaceShip;
 
 
 public class PlayState extends State {
 
+    private static final float CAMERA_ZOOM = 0.75f;
     private Sprite background;
     private SpaceShip ship;
     private Sprite box;
 
 
-    public PlayState(StackGameStateManager stateManager){
+    public PlayState(GameStateManager stateManager){
         super(stateManager);
         background = new Sprite(new Texture(Gdx.files.internal("spaceBackground2.png")));
         background.setPosition(0,0);
         background.setSize(worldWidth,worldHeight);
         /*box = new Sprite(new Texture(Gdx.files.internal("grayBox30x30.png")));*/
         ship = new SpaceShip(new Vector2(0,worldHeight/2));
+        camera.zoom = CAMERA_ZOOM;
+        camera.update();
     }
 
     @Override
@@ -66,7 +70,13 @@ public class PlayState extends State {
 
     @Override
     public void render(SpriteBatch sb) {
-       /* sb.setProjectionMatrix(cam.combined);*/
+        //avoid showing outside the bounds of the world
+        float effectiveViewportWidth = camera.viewportWidth * camera.zoom;
+        float effectiveViewportHeight = camera.viewportHeight * camera.zoom;
+        camera.position.x = MathUtils.clamp(ship.getPosition().x, effectiveViewportWidth / 2f, worldWidth - effectiveViewportWidth / 2f);
+        camera.position.y = MathUtils.clamp(ship.getPosition().y, effectiveViewportHeight / 2f, worldHeight - effectiveViewportHeight / 2f);
+        camera.update();
+
         sb.begin();
         background.draw(sb);
         /*for(int i=1;(i+1)*box.getWidth()<worldWidth;i++){
@@ -74,6 +84,7 @@ public class PlayState extends State {
             sb.draw(box,i*box.getWidth(),worldHeight-box.getHeight());
         }*/
         sb.end();
+
         ship.render(sb);
     }
 

@@ -1,19 +1,27 @@
 package com.brujua.defenders.states;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.Stack;
 
-public class StackGameStateManager {
+/**
+ * Class responsible of managing the different states of the game: menu, play, pause, etc.
+ * This states can be stacked so that you can put one in top of another, and go back.
+ * Only the top state its updated and rendered.
+ */
+public class GameStateManager {
 
     private Stack<State> states;
     private float screenWidth;
     private float screenHeight;
+    private OrthographicCamera camera;
 
 
-    public StackGameStateManager(float screenWidth, float screenHeight){
+    public GameStateManager(float screenWidth, float screenHeight, OrthographicCamera camera){
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
+        this.camera = camera;
         states = new Stack<>();
     }
 
@@ -61,4 +69,7 @@ public class StackGameStateManager {
             states.pop().dispose();
     }
 
+    public OrthographicCamera getCamera() {
+        return camera;
+    }
 }
