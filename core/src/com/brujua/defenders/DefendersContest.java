@@ -11,8 +11,8 @@ import com.brujua.defenders.states.GameStateManager;
 import com.brujua.defenders.utils.AdaptiveViewPort;
 
 public class DefendersContest extends ApplicationAdapter {
-    SpriteBatch batch;
-	GameStateManager stateManager;
+    private SpriteBatch batch;
+	private GameStateManager stateManager;
 	public static float WORLD_WIDHT = 800;
 	public static float WORLD_HEIGHT = WORLD_WIDHT * 9/16; // 450
     private OrthographicCamera camera;
@@ -41,7 +41,6 @@ public class DefendersContest extends ApplicationAdapter {
 	public void render () {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.setProjectionMatrix(camera.combined);
         stateManager.update(Gdx.graphics.getDeltaTime());
 		stateManager.render(batch);

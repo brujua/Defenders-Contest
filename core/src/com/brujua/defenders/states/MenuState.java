@@ -26,6 +26,7 @@ public class MenuState extends State {
 
     public MenuState(GameStateManager stateManager) {
         super(stateManager);
+        camera.zoom = 1;
         background = new Sprite(new Texture(Gdx.files.internal("spaceBackground.png")));
         background.setPosition(0,0);
         background.setSize(worldWidth,worldHeight);
