@@ -11,8 +11,8 @@ public class SpaceShip implements Entity{
     private static final float ACCELERATION_Y_AXIS = 750;
     private static final float MAX_VELOCITY_X_AXIS = 300;
     private static final float MAX_VELOCITY_Y_AXIS = 300;
-    private static final float SHIP_WIDTH = 25;
-    private static final float SHIP_HEIGHT = 25;
+    public static final float SHIP_WIDTH = 25;
+    public static final float SHIP_HEIGHT = 25;
     private Sprite shipSprite;
     private Vector2 position;
     private Vector2 velocity;
@@ -81,4 +81,9 @@ public class SpaceShip implements Entity{
         shipSprite.getTexture().dispose();
     }
 
+    public Shot fireShot(float angle) {
+        //check if firing available and return corresponding shot
+        return new Shot(new Vector2(position.x+SHIP_WIDTH/2,position.y+SHIP_HEIGHT/2), angle);
+        //return null;
+    }
 }
