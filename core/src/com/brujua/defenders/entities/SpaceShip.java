@@ -5,17 +5,22 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.TimeUtils;
+
+import java.util.concurrent.TimeUnit;
 
 public class SpaceShip implements Entity{
     private static final float ACCELERATION_X_AXIS = 750;
     private static final float ACCELERATION_Y_AXIS = 750;
     private static final float MAX_VELOCITY_X_AXIS = 300;
     private static final float MAX_VELOCITY_Y_AXIS = 300;
+    private static final float TIME_BETWEEN_SHOTS = 0.2f;
     public static final float SHIP_WIDTH = 25;
     public static final float SHIP_HEIGHT = 25;
     private Sprite shipSprite;
     private Vector2 position;
     private Vector2 velocity;
+    private long timeLastShot =0;
 
 
     public SpaceShip(Vector2 position){
@@ -82,8 +87,13 @@ public class SpaceShip implements Entity{
     }
 
     public Shot fireShot(float angle) {
+        if(timeLastShot == 0)
+            timeLastShot = TimeUtils.nanoTime();
+        long timeNow = TimeUtils.nanoTime();
+        long enlapsedTime = TimeUnit.NANOSECONDS.toSeconds(timeNow-timeLastShot);
         //check if firing available and return corresponding shot
-        return new Shot(new Vector2(position.x+SHIP_WIDTH/2,position.y+SHIP_HEIGHT/2), angle);
-        //return null;
+        if(enlapsedTime>TIME_BETWEEN_SHOTS)
+            return new Shot(new Vector2(position.x+SHIP_WIDTH/2,position.y+SHIP_HEIGHT/2), angle);
+        return null;
     }
 }

@@ -5,6 +5,7 @@ import com.brujua.defenders.entities.Shot;
 import com.brujua.defenders.entities.SpaceShip;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class Simulation {
@@ -16,7 +17,9 @@ public class Simulation {
     public Simulation(float worldWidth, float worldHeight) {
         this.worldWidth = worldWidth;
         this.worldHeight = worldHeight;
+        //in middle screen left
         SpaceShip player1 = new SpaceShip(new Vector2(0,worldHeight/2));
+        //in middle screen right
         SpaceShip player2 = new SpaceShip(new Vector2(worldWidth-SpaceShip.SHIP_WIDTH,worldHeight/2));
         ships = new ArrayList<>();
         ships.add(player1);
@@ -46,4 +49,70 @@ public class Simulation {
             shots.add(shot);
     }
 
+    public void update(float deltaTime){
+        for (SpaceShip ship : ships)
+            ship.update(deltaTime);
+        for (Shot shot : shots)
+            shot.update(deltaTime);
+        checkCollisions();
+    }
+
+    private void checkCollisions(){
+        for(SpaceShip ship: ships)
+            checkShipOutOfWorld(ship);
+        checkShotsOutOfWorld();
+
+    }
+
+    private void checkShipOutOfWorld(SpaceShip ship) {
+        Vector2 shipPos = ship.getPosition();
+        boolean collied = false;
+        if (shipPos.x < 0) {
+            shipPos.x = 0;
+            collied = true;
+        }
+        if (shipPos.x > worldWidth - ship.width()) {
+            shipPos.x = worldWidth - ship.width();
+            collied = true;
+        }
+        if (shipPos.y < 0) {
+            shipPos.y = 0;
+            collied = true;
+        }
+        if (shipPos.y > worldHeight - ship.height()) {
+            shipPos.y = worldHeight - ship.height();
+            collied = true;
+        }
+        if (collied)
+            ship.collied(shipPos);
+
+    }
+
+    private void checkShotsOutOfWorld() {
+        Iterator<Shot> iterator = shots.iterator();
+        while (iterator.hasNext()){
+            Shot shot = iterator.next();
+            Vector2 shotPos = shot.getPosition();
+            if(shotPos.x<0 || shotPos.y<0 || shotPos.x>worldWidth || shotPos.y>worldWidth){
+                shot.dispose();
+                iterator.remove();
+            }
+        }
+    }
+
+    public List<Shot> getShots(){
+        return shots;
+    }
+
+    public List<SpaceShip> getShips(){
+        return ships;
+    }
+
+    public float getWorldWidth() {
+        return worldWidth;
+    }
+
+    public float getWorldHeight() {
+        return worldHeight;
+    }
 }
