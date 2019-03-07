@@ -24,6 +24,8 @@ public class Simulation {
         ships = new ArrayList<>();
         ships.add(player1);
         ships.add(player2);
+
+        shots = new ArrayList<>();
     }
 
     public void accelerateShipRight(int shipNumber, float factor){
@@ -42,11 +44,14 @@ public class Simulation {
         ships.get(shipNumber).accelerateDown(factor);
     }
 
-    public void fireShot(int shipNumber, float angle){
+    public void fireShot(int shipNumber, Vector2 target){
         SpaceShip ship = ships.get(shipNumber);
-        Shot shot = ship.fireShot(angle);
-        if(shot != null)
+        Vector2 shipPos = ship.getFiringPosition();
+        Vector2 direction = new Vector2((target.x - shipPos.x),(target.y-shipPos.y));
+        Shot shot = ship.fireShot(direction.angle());
+        if(shot != null) {
             shots.add(shot);
+        }
     }
 
     public void update(float deltaTime){
@@ -114,5 +119,10 @@ public class Simulation {
 
     public float getWorldHeight() {
         return worldHeight;
+    }
+
+    public void dispose() {
+        shots.forEach(Shot::dispose);
+        ships.forEach(SpaceShip::dispose);
     }
 }

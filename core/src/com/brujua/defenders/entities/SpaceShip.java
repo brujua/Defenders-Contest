@@ -14,7 +14,7 @@ public class SpaceShip implements Entity{
     private static final float ACCELERATION_Y_AXIS = 750;
     private static final float MAX_VELOCITY_X_AXIS = 300;
     private static final float MAX_VELOCITY_Y_AXIS = 300;
-    private static final float TIME_BETWEEN_SHOTS = 0.2f;
+    private static final long MILLISEC_BETWEEN_SHOTS = 300;
     public static final float SHIP_WIDTH = 25;
     public static final float SHIP_HEIGHT = 25;
     private Sprite shipSprite;
@@ -28,6 +28,7 @@ public class SpaceShip implements Entity{
         velocity = new Vector2(0,0);
         shipSprite = new Sprite(new Texture(Gdx.files.internal("spaceShip.png")));
         shipSprite.setSize(SHIP_WIDTH,SHIP_HEIGHT);
+
 
     }
 
@@ -90,10 +91,16 @@ public class SpaceShip implements Entity{
         if(timeLastShot == 0)
             timeLastShot = TimeUtils.nanoTime();
         long timeNow = TimeUtils.nanoTime();
-        long enlapsedTime = TimeUnit.NANOSECONDS.toSeconds(timeNow-timeLastShot);
+        float enlapsedTime = timeNow-timeLastShot;
         //check if firing available and return corresponding shot
-        if(enlapsedTime>TIME_BETWEEN_SHOTS)
+        if(enlapsedTime>TimeUnit.MILLISECONDS.toNanos(MILLISEC_BETWEEN_SHOTS)){
+            timeLastShot = timeNow;
             return new Shot(new Vector2(position.x+SHIP_WIDTH/2,position.y+SHIP_HEIGHT/2), angle);
+        }
         return null;
+    }
+
+    public Vector2 getFiringPosition() {
+        return new Vector2(position.x + SHIP_WIDTH/2, position.y + SHIP_HEIGHT/2);
     }
 }
